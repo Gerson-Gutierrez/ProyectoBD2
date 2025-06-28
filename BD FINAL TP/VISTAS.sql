@@ -1,4 +1,4 @@
-USE DBGestionComercial;
+USE DBProyectoGestionElectronica;
 
 GO
 

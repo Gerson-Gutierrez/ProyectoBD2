@@ -1,4 +1,5 @@
-USE DBGestionComercial;
+USE DBProyectoGestionElectronica;
+
 
 
 INSERT INTO Categorias (Nombre)
