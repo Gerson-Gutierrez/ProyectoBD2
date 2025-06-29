@@ -900,7 +900,7 @@ BEGIN
             RETURN;
         END
 
-        -- Validar longitud máxima
+     
         IF LEN(@NombreCategoria) > 100
         BEGIN
             RAISERROR('El nombre de la categoría no puede superar los 100 caracteres.', 16, 1);
@@ -1249,14 +1249,14 @@ BEGIN
 
     BEGIN TRY
 
-        -- Validar que el ID del usuario ejecutor no sea NULL
+
         IF @ID_UsuarioEjecutor IS NULL
         BEGIN
             RAISERROR('El ID del usuario ejecutor es obligatorio.', 16, 1);
             RETURN;
         END
 
-        -- Validar que el usuario ejecutor exista y esté activo
+
         IF NOT EXISTS (
             SELECT 1 
             FROM Usuario 
@@ -1267,7 +1267,6 @@ BEGIN
             RETURN;
         END
 
-        -- Validar que el tipo de usuario del ejecutor sea Administrador o Empleado
         IF NOT EXISTS (
             SELECT 1
             FROM Usuario 
@@ -1277,8 +1276,6 @@ BEGIN
             RAISERROR('Solo administradores o empleados pueden listar usuarios.', 16, 1);
             RETURN;
         END
-
-        -- Validar que el usuario ejecutor tenga permiso para listar empleados (ID_SubMenu = 14)
         IF NOT EXISTS (
             SELECT 1
             FROM Usuario u
@@ -1292,14 +1289,13 @@ BEGIN
             RETURN;
         END
 
-        -- Listar empleados y administradores con información adicional
         SELECT 
             u.ID_Usuario,
             u.Nombre_Usuario,
             u.Apellido_Usuario,
             u.DNI_Usuario,
             u.Email,
-            u.Contraseña,  -- Incluido porque vos lo solicitaste
+            u.Contraseña,  
             u.Telefono,
             u.Fecha_Ingreso,
             u.Fecha_Salida,
@@ -1310,7 +1306,7 @@ BEGIN
             END AS Estado
         FROM Usuario u
         JOIN Tipo_de_Usuario tu ON u.ID_TipoUsuario = tu.ID_TipoUsuario
-        WHERE u.ID_TipoUsuario IN (1, 2);  -- Empleado o Administrador
+        WHERE u.ID_TipoUsuario IN (1, 2); 
     END TRY
     BEGIN CATCH
         DECLARE @Mensaje NVARCHAR(4000) = ERROR_MESSAGE();
@@ -1335,7 +1331,7 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        -- Validar que el ID del usuario ejecutor no sea NULL y mayor que cero
+  
         IF @ID_UsuarioEjecutor IS NULL OR @ID_UsuarioEjecutor <= 0
         BEGIN
             RAISERROR('El ID del usuario ejecutor es obligatorio y debe ser mayor que cero.', 16, 1);
@@ -1343,7 +1339,6 @@ BEGIN
             RETURN;
         END
 
-        -- Validar que el ID del empleado a buscar no sea NULL y mayor que cero
         IF @ID_EmpleadoBuscar IS NULL OR @ID_EmpleadoBuscar <= 0
         BEGIN
             RAISERROR('El ID del empleado a buscar es obligatorio y debe ser mayor que cero.', 16, 1);
@@ -1351,7 +1346,6 @@ BEGIN
             RETURN;
         END
 
-        -- Validar existencia y estado activo del usuario ejecutor
         IF NOT EXISTS (
             SELECT 1
             FROM Usuario
@@ -1363,7 +1357,6 @@ BEGIN
             RETURN;
         END
 
-        -- Validar permisos sobre el SubMenú "Buscar Empleado por ID" (ID_SubMenu = 15)
         IF NOT EXISTS (
             SELECT 1
             FROM Usuario u
@@ -1378,7 +1371,6 @@ BEGIN
             RETURN;
         END
 
-        -- Validar existencia del empleado buscado (solo Administrador o Empleado)
         IF NOT EXISTS (
             SELECT 1
             FROM Usuario
@@ -1391,7 +1383,6 @@ BEGIN
             RETURN;
         END
 
-        -- Mostrar datos del empleado
         SELECT 
             u.ID_Usuario AS ID_Empleado,
             u.Nombre_Usuario,
